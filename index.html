@@ -718,13 +718,52 @@
     </div>
   </div>
 
-  <!-- SDK: carregado do backend via fetch com header ngrok (evita página de aviso no celular) -->
+  <!-- Interceptor: redireciona chamadas do SDK de localhost para ngrok e adiciona header -->
   <script>
   (function(){
-    window.__ADMIRA_BASE_URL = 'https://headachy-unadulatory-theola.ngrok-free.dev';
-    var u = window.__ADMIRA_BASE_URL + '/static/js/admira.js';
-    fetch(u, { headers: { 'ngrok-skip-browser-warning': 'true' } })
-      .then(function(r){ return r.text(); })
+    var NGROK = 'https://headachy-unadulatory-theola.ngrok-free.dev';
+    window.__ADMIRA_BASE_URL = NGROK;
+
+    function rewrite(url) {
+      if (!url) return url;
+      var s = String(url);
+      // redireciona localhost:5173 (ou qualquer porta) para ngrok
+      return s.replace(/https?:\/\/localhost(:\d+)?/g, NGROK)
+              .replace(/https?:\/\/127\.0\.0\.1(:\d+)?/g, NGROK);
+    }
+
+    // --- fetch interceptor ---
+    var _fetch = window.fetch;
+    window.fetch = function(input, init) {
+      var url = (input instanceof Request) ? input.url : input;
+      var rewritten = rewrite(url);
+      init = init || {};
+      init.headers = Object.assign({}, init.headers, { 'ngrok-skip-browser-warning': 'true' });
+      if (input instanceof Request) {
+        input = new Request(rewritten, Object.assign({}, input, init));
+      } else {
+        input = rewritten;
+      }
+      return _fetch.call(this, input, init);
+    };
+
+    // --- XHR interceptor ---
+    var _open = XMLHttpRequest.prototype.open;
+    var _setHeader = XMLHttpRequest.prototype.setRequestHeader;
+    XMLHttpRequest.prototype.open = function(method, url, async, user, pass) {
+      this.__url = rewrite(url);
+      return _open.call(this, method, this.__url,
+        async === undefined ? true : async, user, pass);
+    };
+    var _send = XMLHttpRequest.prototype.send;
+    XMLHttpRequest.prototype.send = function(body) {
+      try { _setHeader.call(this, 'ngrok-skip-browser-warning', 'true'); } catch(e){}
+      return _send.call(this, body);
+    };
+
+    // carrega o SDK com o header
+    var u = NGROK + '/static/js/admira.js';
+    fetch(u).then(function(r){ return r.text(); })
       .then(function(code){ var s = document.createElement('script'); s.textContent = code; document.head.appendChild(s); })
       .catch(function(e){ console.warn('Admira SDK load failed', e); });
   })();
