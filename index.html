@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admira SDK - Test Page</title>
+  <link rel="icon" href="data:,">
   <style>
     * {
       margin: 0;
@@ -732,6 +733,16 @@
     (function run(){ if (typeof window.admira === 'undefined') { setTimeout(run, 30); return; }
     let logs = [];
     let sdkInitialized = false;
+    function safeTrack(eventName, props) {
+      if (typeof admira !== 'undefined' && typeof admira.track === 'function') {
+        admira.track(eventName, props);
+      }
+    }
+    function safeIdentify(email, traits) {
+      if (typeof admira !== 'undefined' && typeof admira.identify === 'function') {
+        admira.identify(email, traits || {});
+      }
+    }
     let currentLeadID = null;
     let currentOpportunityID = null;
     let currentContactID = null;
@@ -1182,52 +1193,44 @@
 
     // Track feature click
     function trackFeatureClick(feature) {
-      if (typeof admira !== 'undefined') {
-        admira.track('feature_viewed', {
-          feature_name: feature,
-          timestamp: new Date().toISOString()
-        });
-        addLog(`✅ Feature click rastreado: ${feature}`, 'success');
-      }
+      safeTrack('feature_viewed', {
+        feature_name: feature,
+        timestamp: new Date().toISOString()
+      });
+      addLog(`✅ Feature click rastreado: ${feature}`, 'success');
     }
 
     // View product (simula product_viewed)
     function viewProduct(productId, productName, price) {
-      if (typeof admira !== 'undefined') {
-        admira.track('product_viewed', {
-          product_id: productId,
-          product_name: productName,
-          price: price,
-          timestamp: new Date().toISOString()
-        });
-        addLog(`✅ Product viewed: ${productName}`, 'success');
-      }
+      safeTrack('product_viewed', {
+        product_id: productId,
+        product_name: productName,
+        price: price,
+        timestamp: new Date().toISOString()
+      });
+      addLog(`✅ Product viewed: ${productName}`, 'success');
     }
 
     // Add to cart
     function addToCart(productId, price) {
-      if (typeof admira !== 'undefined') {
-        cartItems.push({ productId, price });
-        admira.track('add_to_cart', {
-          product_id: productId,
-          value: price,
-          timestamp: new Date().toISOString()
-        });
-        addLog(`✅ Produto adicionado ao carrinho: ${productId}`, 'success');
-      }
+      cartItems.push({ productId, price });
+      safeTrack('add_to_cart', {
+        product_id: productId,
+        value: price,
+        timestamp: new Date().toISOString()
+      });
+      addLog(`✅ Produto adicionado ao carrinho: ${productId}`, 'success');
     }
 
     // Go to checkout
     function goToCheckout() {
-      if (typeof admira !== 'undefined') {
-        const total = cartItems.reduce((sum, item) => sum + item.price, 0);
-        admira.track('checkout_started', {
-          cart_value: total,
-          items_count: cartItems.length,
-          timestamp: new Date().toISOString()
-        });
-        addLog(`✅ Checkout iniciado: R$ ${total.toFixed(2)}`, 'success');
-      }
+      const total = cartItems.reduce((sum, item) => sum + item.price, 0);
+      safeTrack('checkout_started', {
+        cart_value: total,
+        items_count: cartItems.length,
+        timestamp: new Date().toISOString()
+      });
+      addLog(`✅ Checkout iniciado: R$ ${total.toFixed(2)}`, 'success');
     }
 
     // Handle contact form (simula lead_created)
@@ -1237,16 +1240,10 @@
       const email = formData.get('email');
       const name = formData.get('name');
 
-      // Identify user
-      if (typeof admira !== 'undefined' && email) {
-        admira.identify(email, {
-          name: name,
-          source: 'contact_form'
-        });
+      if (email) {
+        safeIdentify(email, { name: name, source: 'contact_form' });
         addLog(`✅ Usuário identificado: ${email}`, 'success');
-        
-        // Track lead_created
-        admira.track('lead_created', {
+        safeTrack('lead_created', {
           lead_source: 'contact_form',
           timestamp: new Date().toISOString()
         });
@@ -1271,17 +1268,10 @@
       const name = formData.get('name');
       const plan = formData.get('plan');
 
-      // Identify user
-      if (typeof admira !== 'undefined' && email) {
-        admira.identify(email, {
-          name: name,
-          plan: plan,
-          source: 'signup_form'
-        });
+      if (email) {
+        safeIdentify(email, { name: name, plan: plan, source: 'signup_form' });
         addLog(`✅ Usuário identificado: ${email}`, 'success');
-        
-        // Track signup
-        admira.track('signup', {
+        safeTrack('signup', {
           plan: plan,
           timestamp: new Date().toISOString()
         });
@@ -1393,7 +1383,7 @@
         if (phone) traits.phone = phone;
         if (company) traits.company = company;
 
-        admira.identify(email, traits);
+        safeIdentify(email, traits);
         addLog(`✅ Identify disparado para: ${email}`, 'success');
         addLog(`📊 Traits: ${JSON.stringify(traits)}`, 'info');
       } catch (error) {
@@ -1422,11 +1412,11 @@
 
         // Se tiver email, identifica primeiro
         if (email) {
-          admira.identify(email, { plan: plan || null });
+          safeIdentify(email, { plan: plan || null });
           addLog(`✅ Usuário identificado: ${email}`, 'success');
         }
 
-        await admira.track('signup', properties);
+        safeTrack('signup', properties);
         addLog(`✅ Signup disparado`, 'success');
         addLog(`📊 Properties: ${JSON.stringify(properties)}`, 'info');
       } catch (error) {
@@ -1457,11 +1447,11 @@
 
         // Se tiver email, identifica primeiro
         if (email) {
-          admira.identify(email, { company: company || null });
+          safeIdentify(email, { company: company || null });
           addLog(`✅ Usuário identificado: ${email}`, 'success');
         }
 
-        await admira.track('lead_created', properties);
+        safeTrack('lead_created', properties);
         addLog(`✅ Lead Created disparado`, 'success');
         addLog(`📊 Properties: ${JSON.stringify(properties)}`, 'info');
       } catch (error) {
@@ -1499,15 +1489,12 @@
 
         // Se tiver email, identifica primeiro
         if (email) {
-          admira.identify(email);
+          safeIdentify(email);
           addLog(`✅ Usuário identificado: ${email}`, 'success');
         }
 
-        await admira.track('conversion', properties);
-
-
-
-        admira.track('conversion')
+        safeTrack('conversion', properties);
+        safeTrack('conversion', {});
         addLog(`✅ Conversion disparado: ${conversionType}`, 'success');
         addLog(`📊 Properties: ${JSON.stringify(properties)}`, 'info');
       } catch (error) {
@@ -1558,11 +1545,11 @@
 
         // Se tiver email, identifica primeiro
         if (email) {
-          admira.identify(email);
+          safeIdentify(email);
           addLog(`✅ Usuário identificado: ${email}`, 'success');
         }
 
-        await admira.track('payment', properties);
+        safeTrack('payment', properties);
 
         addLog(`✅ Payment disparado: ${transactionId} - R$ ${revenue}`, 'success');
         addLog(`📊 Properties: ${JSON.stringify(properties)}`, 'info');
@@ -1590,17 +1577,13 @@ async function testSpamProtection() {
     
     // Enviar 5 eventos quase simultaneamente
     for (let i = 1; i <= 5; i++) {
-        promises.push(
-            admira.track('test_spam', {
-                test_number: i,
-                timestamp: new Date().toISOString()
-            }).then(() => {
-                const elapsed = ((Date.now() - startTime) / 1000).toFixed(2);
-                addLog(`📤 Evento ${i} enviado (${elapsed}s)`, 'info');
-            }).catch(err => {
-                addLog(`❌ Erro no evento ${i}: ${err.message}`, 'error');
-            })
-        );
+        safeTrack('test_spam', {
+            test_number: i,
+            timestamp: new Date().toISOString()
+        });
+        const elapsed = ((Date.now() - startTime) / 1000).toFixed(2);
+        addLog(`📤 Evento ${i} enviado (${elapsed}s)`, 'info');
+        promises.push(Promise.resolve());
     }
     
     await Promise.all(promises);
