@@ -1359,28 +1359,19 @@
       }
     }
 
-    // Auto-inicializar ao carregar
-    window.addEventListener('DOMContentLoaded', function() {
-      addLog('📄 Página carregada - Page view capturado automaticamente', 'info');
-      
-      // Verificar se há UTMs na URL
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.has('utm_source')) {
-        addLog('✅ UTMs detectados na URL!', 'success');
+    // Auto-inicializar — DOMContentLoaded já disparou antes do SDK carregar (async)
+    addLog('📄 Página carregada - Page view capturado automaticamente', 'info');
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('utm_source')) {
+      addLog('✅ UTMs detectados na URL!', 'success');
+    }
+    (function tryAutoInit() {
+      const apiKey = document.getElementById('apiKey')?.value;
+      if (apiKey && apiKey.startsWith('apikey-')) {
+        initializeSDK();
+        console.log('[Admira] auto-init done. keys:', JSON.stringify(Object.keys(window.admira)));
       }
-
-      // Auto-inicializar SDK após 1 segundo
-      setTimeout(() => {
-        if (typeof admira !== 'undefined') {
-          const apiKey = document.getElementById('apiKey')?.value;
-          if (apiKey && apiKey.startsWith('apikey-')) {
-            initializeSDK();
-          }
-        } else {
-          addLog('⚠️ SDK não encontrado. Verifique se o servidor está rodando em https://headachy-unadulatory-theola.ngrok-free.dev', 'warning');
-        }
-      }, 1000);
-    });
+    })();
 
     // Smooth scroll para links internos
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
