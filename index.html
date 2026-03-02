@@ -717,9 +717,18 @@
     </div>
   </div>
 
-  <!-- SDK Script -->
-  <script src="https://headachy-unadulatory-theola.ngrok-free.dev/static/js/admira.js"></script>
+  <!-- SDK: carregado do backend via fetch com header ngrok (evita página de aviso no celular) -->
   <script>
+  (function(){
+    var u = 'https://headachy-unadulatory-theola.ngrok-free.dev/static/js/admira.js';
+    fetch(u, { headers: { 'ngrok-skip-browser-warning': 'true' } })
+      .then(function(r){ return r.text(); })
+      .then(function(code){ var s = document.createElement('script'); s.textContent = code; document.head.appendChild(s); })
+      .catch(function(e){ console.warn('Admira SDK load failed', e); });
+  })();
+  </script>
+  <script>
+    (function run(){ if (typeof window.admira === 'undefined') { setTimeout(run, 30); return; }
     let logs = [];
     let sdkInitialized = false;
     let currentLeadID = null;
@@ -1604,6 +1613,7 @@ async function testSpamProtection() {
         // Você pode adicionar uma chamada para verificar no banco aqui
     }, 1000);
 }
+    })();
   </script>
 </body>
 </html>

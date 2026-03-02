@@ -161,17 +161,27 @@
       </div>
     </div>
   </div>
-  <script src="https://headachy-unadulatory-theola.ngrok-free.dev/static/js/admira.js"></script>
   <script>
-    var ADMIRA_API_KEY = 'apikey-eb8abc49-c6ab-4880-912d-8acb5bac920f';
-    window.addEventListener('DOMContentLoaded', function() {
-      setTimeout(function() {
-        if (typeof admira !== 'undefined' && typeof admira.init === 'function' && ADMIRA_API_KEY) {
-          try { admira.init(ADMIRA_API_KEY); } catch (e) { console.warn('Admira init:', e); }
-        }
-      }, 500);
-    });
-    var cartItems = [];
+  (function(){
+    var u = 'https://headachy-unadulatory-theola.ngrok-free.dev/static/js/admira.js';
+    fetch(u, { headers: { 'ngrok-skip-browser-warning': 'true' } })
+      .then(function(r){ return r.text(); })
+      .then(function(code){ var s = document.createElement('script'); s.textContent = code; document.head.appendChild(s); })
+      .catch(function(e){ console.warn('Admira SDK load failed', e); });
+  })();
+  </script>
+  <script>
+    (function run(){
+      if (typeof window.admira === 'undefined') { setTimeout(run, 30); return; }
+      var ADMIRA_API_KEY = 'apikey-eb8abc49-c6ab-4880-912d-8acb5bac920f';
+      window.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+          if (typeof admira !== 'undefined' && typeof admira.init === 'function' && ADMIRA_API_KEY) {
+            try { admira.init(ADMIRA_API_KEY); } catch (e) { console.warn('Admira init:', e); }
+          }
+        }, 500);
+      });
+      var cartItems = [];
     function safeTrack(eventName, props) {
       if (typeof admira !== 'undefined' && typeof admira.track === 'function') {
         admira.track(eventName, props);
@@ -199,6 +209,10 @@
       el.innerHTML = 'Carrinho: ' + cartItems.length + ' item(ns) - Total R$ ' + total.toFixed(2);
       el.style.display = 'block';
     }
+      window.addToCart = addToCart;
+      window.viewProduct = viewProduct;
+      window.goToCheckout = goToCheckout;
+    })();
   </script>
 </body>
 </html>
