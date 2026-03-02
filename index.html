@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admira SDK - Test Page</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      opacity: 0.9;
+      font-size: 1.1em;
+    }
+
+    .content {
+      padding: 30px;
+    }
+
+    .section {
+      margin-bottom: 40px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+    }
+
+    .section h2 {
+      color: #333;
+      margin-bottom: 15px;
+      font-size: 1.5em;
+    }
+
+    .section p {
+      color: #666;
+      margin-bottom: 15px;
+      line-height: 1.6;
+    }
+
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    button {
+      padding: 12px 24px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: #5568d3;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button.secondary {
+      background: #6c757d;
+    }
+
+    button.secondary:hover {
+      background: #5a6268;
+    }
+
+    button.success {
+      background: #28a745;
+    }
+
+    button.success:hover {
+      background: #218838;
+    }
+
+    button.danger {
+      background: #dc3545;
+    }
+
+    button.danger:hover {
+      background: #c82333;
+    }
+
+    button.warning {
+      background: #ffc107;
+      color: #000;
+    }
+
+    button.warning:hover {
+      background: #e0a800;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+      font-weight: 500;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: border-color 0.3s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .status-panel {
+      background: #fff;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 20px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .status-panel h3 {
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .status-item {
+      margin-bottom: 10px;
+      padding: 10px;
+      background: #f8f9fa;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+    }
+
+    .status-item strong {
+      color: #667eea;
+    }
+
+    .log {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 15px;
+      border-radius: 6px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 15px;
+    }
+
+    .log-entry {
+      margin-bottom: 8px;
+      padding: 5px;
+      border-left: 3px solid #667eea;
+      padding-left: 10px;
+    }
+
+    .log-entry.success {
+      border-left-color: #28a745;
+      color: #28a745;
+    }
+
+    .log-entry.error {
+      border-left-color: #dc3545;
+      color: #dc3545;
+    }
+
+    .log-entry.info {
+      border-left-color: #17a2b8;
+      color: #17a2b8;
+    }
+
+    .alert {
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+
+    .alert.info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border-left: 4px solid #17a2b8;
+    }
+
+    .alert.success {
+      background: #d4edda;
+      color: #155724;
+      border-left: 4px solid #28a745;
+    }
+
+    .alert.warning {
+      background: #fff3cd;
+      color: #856404;
+      border-left: 4px solid #ffc107;
+    }
+
+    .id-display {
+      background: #fff;
+      border: 2px solid #667eea;
+      border-radius: 6px;
+      padding: 15px;
+      margin-top: 15px;
+    }
+
+    .id-display h4 {
+      color: #667eea;
+      margin-bottom: 10px;
+    }
+
+    .id-item {
+      margin-bottom: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      word-break: break-all;
+    }
+
+    /* Estilos para simular uma página real */
+    .hero {
+      text-align: center;
+      padding: 60px 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      margin-bottom: 40px;
+    }
+
+    .hero h1 {
+      font-size: 3em;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      font-size: 1.3em;
+      opacity: 0.9;
+      margin-bottom: 30px;
+    }
+
+    .cta-button {
+      display: inline-block;
+      padding: 15px 40px;
+      background: white;
+      color: #667eea;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1.1em;
+      transition: transform 0.3s;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-3px);
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 40px 0;
+    }
+
+    .feature-card {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .feature-card h3 {
+      color: #667eea;
+      margin-bottom: 15px;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .product-card {
+      background: white;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .product-card:hover {
+      border-color: #667eea;
+      transform: translateY(-5px);
+    }
+
+    .product-card h4 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .product-card .price {
+      font-size: 1.5em;
+      color: #28a745;
+      font-weight: bold;
+      margin: 15px 0;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .nav {
+      background: #5a67d8;
+      padding: 12px 30px;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .nav a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav class="nav">
+      <a href="./">Início</a>
+      <a href="teste1/">Teste 1</a>
+      <a href="teste2/">Teste 2</a>
+    </nav>
+    <!-- Hero Section (simula landing page) -->
+    <div class="hero">
+      <h1>🚀 Bem-vindo à Nossa Plataforma</h1>
+      <p>Descubra como podemos transformar seu negócio</p>
+      <a href="#contato" class="cta-button" id="heroCTA">Começar Agora</a>
+    </div>
+
+    <div class="content">
+      <!-- Configuração do SDK (oculto por padrão, mas acessível) -->
+      <div class="section hidden" id="configSection">
+        <h2>⚙️ Configuração do SDK</h2>
+        <div class="alert info">
+          <strong>💡 Dica:</strong> Para testar UTMs, adicione parâmetros na URL: 
+          <code>?utm_source=google&utm_medium=cpc&utm_campaign=test&add_id=123</code>
+        </div>
+        <div class="form-group">
+          <label for="apiKey">API Key:</label>
+          <input type="text" id="apiKey" value="apikey-eb8abc49-c6ab-4880-912d-8acb5bac920f" placeholder="apikey-...">
+        </div>
+        <button onclick="initializeSDK()">Inicializar SDK</button>
+        <button class="secondary" onclick="checkStatus()">Verificar Status</button>
+        <button class="danger" onclick="clearData()">Limpar Dados</button>
+      </div>
+
+      <!-- Status do SDK (oculto por padrão) -->
+      <div class="section hidden" id="statusSection">
+        <h2>📊 Status do SDK</h2>
+        <div id="statusPanel" class="status-panel">
+          <p style="color: #999;">Clique em "Verificar Status" para ver as informações do SDK</p>
+        </div>
+      </div>
+
+      <!-- Simulação de Cron (Linkagem) - Mantido visível -->
+      <div class="section" style="border-left-color: #ffc107;">
+        <h2>🔗 Simulação de Cron - Linkagem</h2>
+        <button onclick="testSpamProtection()" style="background: #ff6b6b; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+    🧪 Testar Spam Protection
+</button>
+        <div class="alert warning">
+          <strong>⚠️ Atenção:</strong> Estas funções simulam o cron job que linka touchpoints a leads e deals. 
+          Use após criar touchpoints via SDK navegando pela página.
+        </div>
+        <div class="form-group">
+          <label for="cronEmail">Email do Usuário:</label>
+          <input type="email" id="cronEmail" placeholder="usuario@exemplo.com" value="">
+        </div>
+        <div class="form-group">
+          <label for="leadCreatedAt">Lead Created At (opcional, formato: 2026-01-13T00:18:03-03:00):</label>
+          <input type="text" id="leadCreatedAt" placeholder="2026-01-13T00:18:03-03:00" title="Formato RFC3339: YYYY-MM-DDTHH:mm:ss±HH:mm">
+        </div>
+        <div class="form-group">
+          <label for="dealCreatedAt">Deal Created At (opcional, formato: 2026-01-13T00:31:21-03:00):</label>
+          <input type="text" id="dealCreatedAt" placeholder="2026-01-13T00:31:21-03:00" title="Formato RFC3339: YYYY-MM-DDTHH:mm:ss±HH:mm">
+        </div>
+        <div class="form-group">
+          <label for="dealWonAt">Deal Won At (opcional, formato: 2026-01-13T08:43:15-03:00):</label>
+          <input type="text" id="dealWonAt" placeholder="2026-01-13T08:43:15-03:00" title="Formato RFC3339: YYYY-MM-DDTHH:mm:ss±HH:mm">
+        </div>
+        <div class="form-group">
+          <label for="dealLostAt">Deal Lost At (opcional, formato: 2026-01-13T08:43:15-03:00):</label>
+          <input type="text" id="dealLostAt" placeholder="2026-01-13T08:43:15-03:00" title="Formato RFC3339: YYYY-MM-DDTHH:mm:ss±HH:mm">
+        </div>
+        <div class="button-group">
+          <button class="success" onclick="simulateLeadCreation()">Simular Lead Creation</button>
+          <button class="warning" onclick="simulateDealCreation()">Simular Deal Creation</button>
+          <button class="warning" onclick="simulateDealOnly()" style="background: #ff9800;">Simular Deal Creation (SEM Lead)</button>
+          <button class="success" onclick="markDealWon()">Marcar Deal como Won</button>
+          <button class="danger" onclick="markDealLost()">Marcar Deal como Lost</button>
+        </div>
+        <div id="cronResults" class="id-display" style="display: none;">
+          <h4>IDs Criados:</h4>
+          <div id="cronResultsContent"></div>
+        </div>
+      </div>
+
+      <!-- Features Section (simula conteúdo real) -->
+      <div class="section">
+        <h2>✨ Nossos Recursos</h2>
+        <div class="features">
+          <div class="feature-card">
+            <h3>⚡ Performance</h3>
+            <p>Alta performance e escalabilidade para seu negócio</p>
+            <button class="secondary" style="margin-top: 15px;" onclick="trackFeatureClick('performance')">Saiba Mais</button>
+          </div>
+          <div class="feature-card">
+            <h3>🔒 Segurança</h3>
+            <p>Proteção de dados de nível empresarial</p>
+            <button class="secondary" style="margin-top: 15px;" onclick="trackFeatureClick('security')">Saiba Mais</button>
+          </div>
+          <div class="feature-card">
+            <h3>📊 Analytics</h3>
+            <p>Insights poderosos para decisões inteligentes</p>
+            <button class="secondary" style="margin-top: 15px;" onclick="trackFeatureClick('analytics')">Saiba Mais</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Products Section (simula e-commerce) -->
+      <div class="section">
+        <h2>🛒 Nossos Produtos</h2>
+        <div class="product-grid">
+          <div class="product-card" onclick="viewProduct('produto-1', 'Produto Premium', 299.90)">
+            <h4>Produto Premium</h4>
+            <p>Descrição do produto premium</p>
+            <div class="price">R$ 299,90</div>
+            <button class="success" onclick="event.stopPropagation(); addToCart('produto-1', 299.90)">Adicionar ao Carrinho</button>
+          </div>
+          <div class="product-card" onclick="viewProduct('produto-2', 'Produto Básico', 99.90)">
+            <h4>Produto Básico</h4>
+            <p>Descrição do produto básico</p>
+            <div class="price">R$ 99,90</div>
+            <button class="success" onclick="event.stopPropagation(); addToCart('produto-2', 99.90)">Adicionar ao Carrinho</button>
+          </div>
+          <div class="product-card" onclick="viewProduct('produto-3', 'Produto Enterprise', 999.90)">
+            <h4>Produto Enterprise</h4>
+            <p>Descrição do produto enterprise</p>
+            <div class="price">R$ 999,90</div>
+            <button class="success" onclick="event.stopPropagation(); addToCart('produto-3', 999.90)">Adicionar ao Carrinho</button>
+          </div>
+        </div>
+        <div style="text-align: center; margin-top: 30px;">
+          <button class="success" style="padding: 15px 40px; font-size: 1.1em;" onclick="goToCheckout()">Finalizar Compra</button>
+        </div>
+      </div>
+
+      <!-- Formulário de Contato (simula lead capture) -->
+      <div class="section" id="contato">
+        <h2>📋 Entre em Contato</h2>
+        <p>Preencha o formulário abaixo e nossa equipe entrará em contato:</p>
+        <form id="contactForm" onsubmit="handleContactForm(event)">
+          <div class="form-group">
+            <label for="formName">Nome:</label>
+            <input type="text" id="formName" name="name" placeholder="João Silva" required>
+          </div>
+          <div class="form-group">
+            <label for="formEmail">Email:</label>
+            <input type="email" id="formEmail" name="email" placeholder="usuario@exemplo.com" required>
+          </div>
+          <div class="form-group">
+            <label for="formPhone">Telefone:</label>
+            <input type="tel" id="formPhone" name="phone" placeholder="+5511999999999">
+          </div>
+          <div class="form-group">
+            <label for="formMessage">Mensagem:</label>
+            <textarea id="formMessage" name="message" rows="4" placeholder="Sua mensagem aqui..."></textarea>
+          </div>
+          <button type="submit" class="success">Enviar Mensagem</button>
+        </form>
+      </div>
+
+      <!-- Formulário de Cadastro (simula signup) -->
+      <div class="section">
+        <h2>📝 Criar Conta</h2>
+        <p>Cadastre-se para começar a usar nossa plataforma:</p>
+        <form id="signupForm" onsubmit="handleSignupForm(event)">
+          <div class="form-group">
+            <label for="signupName">Nome Completo:</label>
+            <input type="text" id="signupName" name="name" placeholder="João Silva" required>
+          </div>
+          <div class="form-group">
+            <label for="signupEmail">Email:</label>
+            <input type="email" id="signupEmail" name="email" placeholder="usuario@exemplo.com" required>
+          </div>
+          <div class="form-group">
+            <label for="signupPassword">Senha:</label>
+            <input type="password" id="signupPassword" name="password" placeholder="••••••••" required>
+          </div>
+          <div class="form-group">
+            <label for="signupPlan">Plano:</label>
+            <select id="signupPlan" name="plan" required>
+              <option value="">Selecione um plano</option>
+              <option value="basic">Básico - R$ 99/mês</option>
+              <option value="premium">Premium - R$ 299/mês</option>
+              <option value="enterprise">Enterprise - R$ 999/mês</option>
+            </select>
+          </div>
+          <button type="submit" class="success">Criar Conta</button>
+        </form>
+      </div>
+
+      <!-- Eventos de Conversão - Teste Manual -->
+      <div class="section" style="border-left-color: #17a2b8;">
+        <h2>🎯 Eventos de Conversão - Teste Manual</h2>
+        <div class="alert info">
+          <strong>💡 Instruções:</strong> Preencha os campos abaixo e clique no botão correspondente para disparar cada evento de conversão. 
+          O <code>anonymous_user_id</code> será obtido automaticamente do SDK.
+        </div>
+
+        <!-- 1. IDENTIFY -->
+        <div style="margin-bottom: 30px; padding: 20px; background: white; border-radius: 8px; border: 2px solid #e0e0e0;">
+          <h3 style="color: #667eea; margin-bottom: 15px;">1️⃣ Identify</h3>
+          <p style="color: #666; margin-bottom: 15px;">Identifica um usuário com email e traits opcionais.</p>
+          <div class="form-group">
+            <label for="identifyEmail">Email:</label>
+            <input type="email" id="identifyEmail" placeholder="usuario@exemplo.com">
+          </div>
+          <div class="form-group">
+            <label for="identifyName">Nome (opcional):</label>
+            <input type="text" id="identifyName" placeholder="João Silva">
+          </div>
+          <div class="form-group">
+            <label for="identifyPhone">Telefone (opcional):</label>
+            <input type="tel" id="identifyPhone" placeholder="+5511999999999">
+          </div>
+          <div class="form-group">
+            <label for="identifyCompany">Empresa (opcional):</label>
+            <input type="text" id="identifyCompany" placeholder="Empresa XYZ">
+          </div>
+          <button class="success" onclick="triggerIdentify()">Disparar Identify</button>
+        </div>
+
+        <!-- 2. SIGNUP -->
+        <div style="margin-bottom: 30px; padding: 20px; background: white; border-radius: 8px; border: 2px solid #e0e0e0;">
+          <h3 style="color: #667eea; margin-bottom: 15px;">2️⃣ Signup</h3>
+          <p style="color: #666; margin-bottom: 15px;">Registra quando um usuário cria uma conta.</p>
+          <div class="form-group">
+            <label for="signupEventEmail">Email:</label>
+            <input type="email" id="signupEventEmail" placeholder="usuario@exemplo.com">
+          </div>
+          <div class="form-group">
+            <label for="signupEventPlan">Plano (opcional):</label>
+            <input type="text" id="signupEventPlan" placeholder="premium">
+          </div>
+          <div class="form-group">
+            <label for="signupEventSource">Fonte (opcional):</label>
+            <input type="text" id="signupEventSource" placeholder="website">
+          </div>
+          <button class="success" onclick="triggerSignup()">Disparar Signup</button>
+        </div>
+
+        <!-- 3. LEAD_CREATED -->
+        <div style="margin-bottom: 30px; padding: 20px; background: white; border-radius: 8px; border: 2px solid #e0e0e0;">
+          <h3 style="color: #667eea; margin-bottom: 15px;">3️⃣ Lead Created</h3>
+          <p style="color: #666; margin-bottom: 15px;">Registra quando um lead é criado no sistema.</p>
+          <div class="form-group">
+            <label for="leadCreatedEmail">Email:</label>
+            <input type="email" id="leadCreatedEmail" placeholder="lead@exemplo.com">
+          </div>
+          <div class="form-group">
+            <label for="leadCreatedSource">Fonte do Lead (opcional):</label>
+            <input type="text" id="leadCreatedSource" placeholder="contact_form">
+          </div>
+          <div class="form-group">
+            <label for="leadCreatedValue">Valor do Lead (opcional):</label>
+            <input type="number" id="leadCreatedValue" placeholder="5000.00" step="0.01">
+          </div>
+          <div class="form-group">
+            <label for="leadCreatedCompany">Empresa (opcional):</label>
+            <input type="text" id="leadCreatedCompany" placeholder="Empresa XYZ">
+          </div>
+          <button class="success" onclick="triggerLeadCreated()">Disparar Lead Created</button>
+        </div>
+
+        <!-- 4. CONVERSION -->
+        <div style="margin-bottom: 30px; padding: 20px; background: white; border-radius: 8px; border: 2px solid #e0e0e0;">
+          <h3 style="color: #667eea; margin-bottom: 15px;">4️⃣ Conversion</h3>
+          <p style="color: #666; margin-bottom: 15px;">Registra uma conversão genérica (download, agendamento, etc.).</p>
+          <div class="form-group">
+            <label for="conversionType">Tipo de Conversão:</label>
+            <input type="text" id="conversionType" placeholder="ebook_download" required>
+          </div>
+          <div class="form-group">
+            <label for="conversionName">Nome do Item (opcional):</label>
+            <input type="text" id="conversionName" placeholder="Guia Completo de Marketing">
+          </div>
+          <div class="form-group">
+            <label for="conversionValue">Valor (opcional):</label>
+            <input type="number" id="conversionValue" placeholder="0" step="0.01">
+          </div>
+          <div class="form-group">
+            <label for="conversionEmail">Email (opcional):</label>
+            <input type="email" id="conversionEmail" placeholder="usuario@exemplo.com">
+          </div>
+          <button class="success" onclick="triggerConversion()">Disparar Conversion</button>
+        </div>
+
+        <!-- 5. PAYMENT -->
+        <div style="margin-bottom: 30px; padding: 20px; background: white; border-radius: 8px; border: 2px solid #e0e0e0;">
+          <h3 style="color: #667eea; margin-bottom: 15px;">5️⃣ Payment</h3>
+          <p style="color: #666; margin-bottom: 15px;">Registra quando um pagamento ou compra é realizado.</p>
+          <div class="form-group">
+            <label for="paymentTransactionId">Transaction ID:</label>
+            <input type="text" id="paymentTransactionId" placeholder="txn_abc123" required>
+          </div>
+          <div class="form-group">
+            <label for="paymentRevenue">Receita (Revenue):</label>
+            <input type="number" id="paymentRevenue" placeholder="299.90" step="0.01" required>
+          </div>
+          <div class="form-group">
+            <label for="paymentCurrency">Moeda:</label>
+            <input type="text" id="paymentCurrency" placeholder="BRL" value="BRL">
+          </div>
+          <div class="form-group">
+            <label for="paymentMethod">Método de Pagamento (opcional):</label>
+            <input type="text" id="paymentMethod" placeholder="credit_card">
+          </div>
+          <div class="form-group">
+            <label for="paymentEmail">Email (opcional):</label>
+            <input type="email" id="paymentEmail" placeholder="usuario@exemplo.com">
+          </div>
+          <div class="form-group">
+            <label for="paymentProductId">Product ID (opcional):</label>
+            <input type="text" id="paymentProductId" placeholder="prod_001">
+          </div>
+          <div class="form-group">
+            <label for="paymentProductName">Nome do Produto (opcional):</label>
+            <input type="text" id="paymentProductName" placeholder="Plano Premium">
+          </div>
+          <button class="success" onclick="triggerPayment()">Disparar Payment</button>
+        </div>
+      </div>
+
+      <!-- Touchpoints (oculto por padrão) -->
+      <div class="section hidden" id="touchpointsSection">
+        <h2>📍 Touchpoints UTM</h2>
+        <p>Visualize o histórico de touchpoints UTM armazenados:</p>
+        <button onclick="showTouchpoints()">Mostrar Touchpoints</button>
+        <div id="touchpointsPanel" class="status-panel" style="display: none; margin-top: 15px;">
+          <p style="color: #999;">Nenhum touchpoint encontrado</p>
+        </div>
+      </div>
+
+      <!-- Logs (oculto por padrão) -->
+      <div class="section hidden" id="logsSection">
+        <h2>📋 Logs de Eventos</h2>
+        <div id="logs" class="log">
+          <div class="log-entry info">Aguardando eventos...</div>
+        </div>
+        <button class="secondary" onclick="clearLogs()">Limpar Logs</button>
+      </div>
+
+      <!-- Botão para mostrar/ocultar seções técnicas -->
+      <div style="text-align: center; margin-top: 40px;">
+        <button class="secondary" onclick="toggleTechnicalSections()">🔧 Mostrar/Ocultar Seções Técnicas</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SDK Script -->
+  <script src="http://localhost:5173/static/js/admira.js"></script>
+  <script>
+    let logs = [];
+    let sdkInitialized = false;
+    let currentLeadID = null;
+    let currentOpportunityID = null;
+    let currentContactID = null;
+    let currentAnonymousUserID = null;
+    let cartItems = [];
+
+    // Função para adicionar log
+    function addLog(message, type = 'info') {
+      const timestamp = new Date().toLocaleTimeString();
+      logs.push({ message, type, timestamp });
+      updateLogsDisplay();
+    }
+
+    // Atualizar display de logs
+    function updateLogsDisplay() {
+      const logsDiv = document.getElementById('logs');
+      if (logsDiv) {
+        logsDiv.innerHTML = logs.slice(-50).map(log => {
+          return `<div class="log-entry ${log.type}">[${log.timestamp}] ${log.message}</div>`;
+        }).join('');
+        logsDiv.scrollTop = logsDiv.scrollHeight;
+      }
+    }
+
+    // Limpar logs
+    function clearLogs() {
+      logs = [];
+      updateLogsDisplay();
+      addLog('Logs limpos', 'info');
+    }
+
+    // Toggle seções técnicas
+    function toggleTechnicalSections() {
+      const sections = ['configSection', 'statusSection', 'touchpointsSection', 'logsSection'];
+      sections.forEach(id => {
+        const section = document.getElementById(id);
+        if (section) {
+          section.classList.toggle('hidden');
+        }
+      });
+    }
+
+    // Inicializar SDK
+    function initializeSDK() {
+      const apiKey = document.getElementById('apiKey').value;
+
+      if (!apiKey || !apiKey.startsWith('apikey-')) {
+        addLog('❌ API Key inválida! Deve começar com "apikey-"', 'error');
+        alert('API Key inválida! Deve começar com "apikey-"');
+        return;
+      }
+
+      try {
+        admira.init(apiKey);
+        sdkInitialized = true;
+        addLog('✅ SDK inicializado com sucesso!', 'success');
+        checkStatus();
+      } catch (error) {
+        addLog(`❌ Erro ao inicializar SDK: ${error.message}`, 'error');
+        console.error('SDK Init Error:', error);
+      }
+    }
+
+    // Verificar status
+    function checkStatus() {
+      if (!sdkInitialized && typeof admira === 'undefined') {
+        addLog('⚠️ SDK não inicializado. Clique em "Inicializar SDK" primeiro.', 'warning');
+        return;
+      }
+
+      try {
+        const status = admira.getStatus();
+        const statusPanel = document.getElementById('statusPanel');
+        
+        if (statusPanel) {
+          if (status.anonymousUserID) {
+            currentAnonymousUserID = status.anonymousUserID;
+          }
+          
+          statusPanel.innerHTML = `
+            <h3>Status do SDK</h3>
+            <div class="status-item">
+              <strong>Anonymous User ID:</strong> ${status.anonymousUserID || 'N/A'}
+            </div>
+            <div class="status-item">
+              <strong>Session ID:</strong> ${status.sessionId || 'N/A'}
+            </div>
+            <div class="status-item">
+              <strong>API Key:</strong> ${status.apikey ? status.apikey.substring(0, 20) + '...' : 'N/A'}
+            </div>
+            <div class="status-item">
+              <strong>UTM Parameters:</strong>
+              <pre style="margin-top: 5px; background: #fff; padding: 10px; border-radius: 4px; overflow-x: auto;">${JSON.stringify(status.utmParameters || {}, null, 2)}</pre>
+            </div>
+          `;
+        }
+        
+        addLog('✅ Status verificado', 'success');
+      } catch (error) {
+        addLog(`❌ Erro ao verificar status: ${error.message}`, 'error');
+      }
+    }
+
+    // Limpar dados
+    function clearData() {
+      if (confirm('Tem certeza que deseja limpar todos os dados do SDK?')) {
+        try {
+          admira.clearData();
+          addLog('✅ Dados limpos com sucesso', 'success');
+          currentLeadID = null;
+          currentOpportunityID = null;
+          currentContactID = null;
+          currentAnonymousUserID = null;
+          cartItems = [];
+          updateCronResults();
+          checkStatus();
+        } catch (error) {
+          addLog(`❌ Erro ao limpar dados: ${error.message}`, 'error');
+        }
+      }
+    }
+
+    // Simular Lead Creation
+    async function simulateLeadCreation() {
+      const email = document.getElementById('cronEmail').value;
+      const leadCreatedAt = document.getElementById('leadCreatedAt').value;
+      
+      if (!email) {
+        addLog('❌ Email é obrigatório para simular lead creation', 'error');
+        alert('Por favor, preencha o email');
+        return;
+      }
+
+      if (!currentAnonymousUserID) {
+        addLog('❌ Anonymous User ID não encontrado. Verifique o status do SDK primeiro.', 'error');
+        alert('Por favor, inicialize o SDK e verifique o status primeiro');
+        return;
+      }
+
+      try {
+        addLog('🔄 Simulando lead creation...', 'info');
+        
+        const requestBody = {
+          anonymous_user_id: currentAnonymousUserID,
+          email: email,
+          create_deal: false
+        };
+        
+        // Add optional timestamp if provided
+        if (leadCreatedAt && leadCreatedAt.trim() !== '') {
+          requestBody.lead_created_at = leadCreatedAt.trim();
+        }
+        
+        const response = await fetch('http://localhost:5173/test/simulate-cron', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestBody)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          currentLeadID = result.lead_id;
+          currentContactID = result.contact_id;
+          addLog(`✅ Lead criado com sucesso! Lead ID: ${result.lead_id}`, 'success');
+          addLog(`📊 Touchpoints linkados: ${result.touchpoints_linked || 0}`, 'success');
+          updateCronResults(result);
+        } else {
+          addLog(`❌ Erro ao criar lead: ${result.message}`, 'error');
+        }
+      } catch (error) {
+        addLog(`❌ Erro na requisição: ${error.message}`, 'error');
+        console.error('Cron simulation error:', error);
+      }
+    }
+
+    // Simular Deal Creation
+    async function simulateDealCreation() {
+      const email = document.getElementById('cronEmail').value;
+      const leadCreatedAt = document.getElementById('leadCreatedAt').value;
+      const dealCreatedAt = document.getElementById('dealCreatedAt').value;
+      
+      if (!email) {
+        addLog('❌ Email é obrigatório para simular deal creation', 'error');
+        alert('Por favor, preencha o email');
+        return;
+      }
+
+      if (!currentAnonymousUserID) {
+        addLog('❌ Anonymous User ID não encontrado. Verifique o status do SDK primeiro.', 'error');
+        alert('Por favor, inicialize o SDK e verifique o status primeiro');
+        return;
+      }
+
+      try {
+        addLog('🔄 Simulando deal creation...', 'info');
+        
+        const requestBody = {
+          anonymous_user_id: currentAnonymousUserID,
+          email: email,
+          create_deal: true,
+          deal_won: null
+        };
+        
+        // Add optional timestamps if provided
+        if (leadCreatedAt && leadCreatedAt.trim() !== '') {
+          requestBody.lead_created_at = leadCreatedAt.trim();
+        }
+        if (dealCreatedAt && dealCreatedAt.trim() !== '') {
+          requestBody.deal_created_at = dealCreatedAt.trim();
+        }
+        
+        const response = await fetch('http://localhost:5173/test/simulate-cron', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestBody)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          currentLeadID = result.lead_id;
+          currentContactID = result.contact_id;
+          currentOpportunityID = result.opportunity_id;
+          addLog(`✅ Deal criado com sucesso! Opportunity ID: ${result.opportunity_id}`, 'success');
+          updateCronResults(result);
+        } else {
+          addLog(`❌ Erro ao criar deal: ${result.message}`, 'error');
+        }
+      } catch (error) {
+        addLog(`❌ Erro na requisição: ${error.message}`, 'error');
+        console.error('Cron simulation error:', error);
+      }
+    }
+
+    // FOR TEST ONLY, PLEASE DELETE - Simular Deal Creation (SEM criar lead primeiro)
+    async function simulateDealOnly() {
+      const email = document.getElementById('cronEmail').value;
+      const dealCreatedAt = document.getElementById('dealCreatedAt').value;
+      
+      if (!email) {
+        addLog('❌ Email é obrigatório', 'error');
+        alert('Por favor, preencha o email');
+        return;
+      }
+
+      if (!currentAnonymousUserID) {
+        addLog('❌ Anonymous User ID não encontrado. Verifique o status do SDK primeiro.', 'error');
+        alert('Por favor, inicialize o SDK e verifique o status primeiro');
+        return;
+      }
+
+      try {
+        addLog('🔄 Simulando deal creation (SEM lead)...', 'info');
+        
+        const requestBody = {
+          anonymous_user_id: currentAnonymousUserID,
+          email: email
+        };
+        
+        // Add optional timestamp if provided
+        if (dealCreatedAt && dealCreatedAt.trim() !== '') {
+          requestBody.deal_created_at = dealCreatedAt.trim();
+        }
+        
+        const response = await fetch('http://localhost:5173/test/simulate-deal-only', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestBody)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          addLog(`❌ Erro ${response.status}: ${result.message || 'Erro desconhecido'}`, 'error');
+          return;
+        }
+
+        if (result.success) {
+          currentOpportunityID = result.opportunity_id;
+          addLog(`✅ Deal criado (sem lead)! Opportunity ID: ${result.opportunity_id}`, 'success');
+          addLog(`📊 Touchpoints linkados: ${result.touchpoints_linked || 0}`, 'success');
+          updateCronResults(result);
+        } else {
+          addLog(`❌ Erro ao criar deal: ${result.message}`, 'error');
+        }
+      } catch (error) {
+        addLog(`❌ Erro na requisição: ${error.message}`, 'error');
+        console.error('Deal-only simulation error:', error);
+      }
+    }
+
+    // Marcar Deal como Won
+    async function markDealWon() {
+      const email = document.getElementById('cronEmail').value;
+      
+      if (!email) {
+        addLog('❌ Email é obrigatório', 'error');
+        alert('Por favor, preencha o email');
+        return;
+      }
+
+      if (!currentAnonymousUserID) {
+        addLog('❌ Anonymous User ID não encontrado', 'error');
+        return;
+      }
+
+      if (!currentOpportunityID) {
+        addLog('⚠️ Opportunity ID não encontrado. Criando deal primeiro...', 'warning');
+        await simulateDealCreation();
+        if (!currentOpportunityID) {
+          addLog('❌ Não foi possível criar o deal', 'error');
+          return;
+        }
+      }
+
+      try {
+        addLog('🔄 Marcando deal como won...', 'info');
+        
+        const dealWonAt = document.getElementById('dealWonAt').value;
+        const requestBody = {
+          anonymous_user_id: currentAnonymousUserID,
+          email: email,
+          create_deal: false,
+          deal_won: true,
+          opportunity_id: currentOpportunityID
+        };
+        
+        // Add optional timestamp if provided
+        if (dealWonAt && dealWonAt.trim() !== '') {
+          requestBody.deal_won_at = dealWonAt.trim();
+        }
+        
+        const response = await fetch('http://localhost:5173/test/simulate-cron', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestBody)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          addLog('✅ Deal marcado como won!', 'success');
+          updateCronResults(result);
+        } else {
+          addLog(`❌ Erro ao marcar deal como won: ${result.message}`, 'error');
+        }
+      } catch (error) {
+        addLog(`❌ Erro na requisição: ${error.message}`, 'error');
+        console.error('Mark deal won error:', error);
+      }
+    }
+
+    // Marcar Deal como Lost
+    async function markDealLost() {
+      const email = document.getElementById('cronEmail').value;
+      
+      if (!email) {
+        addLog('❌ Email é obrigatório', 'error');
+        alert('Por favor, preencha o email');
+        return;
+      }
+
+      if (!currentAnonymousUserID) {
+        addLog('❌ Anonymous User ID não encontrado', 'error');
+        return;
+      }
+
+      if (!currentOpportunityID) {
+        addLog('⚠️ Opportunity ID não encontrado. Criando deal primeiro...', 'warning');
+        await simulateDealCreation();
+        if (!currentOpportunityID) {
+          addLog('❌ Não foi possível criar o deal', 'error');
+          return;
+        }
+      }
+
+      try {
+        addLog('🔄 Marcando deal como lost...', 'info');
+        
+        const dealLostAt = document.getElementById('dealLostAt').value;
+        const requestBody = {
+          anonymous_user_id: currentAnonymousUserID,
+          email: email,
+          create_deal: false,
+          deal_won: false,
+          opportunity_id: currentOpportunityID
+        };
+        
+        // Add optional timestamp if provided
+        if (dealLostAt && dealLostAt.trim() !== '') {
+          requestBody.deal_lost_at = dealLostAt.trim();
+        }
+        
+        const response = await fetch('http://localhost:5173/test/simulate-cron', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestBody)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          addLog('✅ Deal marcado como lost!', 'success');
+          updateCronResults(result);
+        } else {
+          addLog(`❌ Erro ao marcar deal como lost: ${result.message}`, 'error');
+        }
+      } catch (error) {
+        addLog(`❌ Erro na requisição: ${error.message}`, 'error');
+        console.error('Mark deal lost error:', error);
+      }
+    }
+
+    // Atualizar display de resultados do cron
+    function updateCronResults(result = null) {
+      const resultsDiv = document.getElementById('cronResults');
+      const contentDiv = document.getElementById('cronResultsContent');
+      
+      if (!resultsDiv || !contentDiv) return;
+      
+      if (result) {
+        contentDiv.innerHTML = `
+          ${result.lead_id ? `<div class="id-item"><strong>Lead ID:</strong> ${result.lead_id}</div>` : ''}
+          ${result.contact_id ? `<div class="id-item"><strong>Contact ID:</strong> ${result.contact_id}</div>` : ''}
+          ${result.opportunity_id ? `<div class="id-item"><strong>Opportunity ID:</strong> ${result.opportunity_id}</div>` : ''}
+          ${result.touchpoints_linked ? `<div class="id-item"><strong>Touchpoints Linkados:</strong> ${result.touchpoints_linked}</div>` : ''}
+        `;
+        resultsDiv.style.display = 'block';
+      } else {
+        let html = '';
+        if (currentLeadID) html += `<div class="id-item"><strong>Lead ID:</strong> ${currentLeadID}</div>`;
+        if (currentContactID) html += `<div class="id-item"><strong>Contact ID:</strong> ${currentContactID}</div>`;
+        if (currentOpportunityID) html += `<div class="id-item"><strong>Opportunity ID:</strong> ${currentOpportunityID}</div>`;
+        if (currentAnonymousUserID) html += `<div class="id-item"><strong>Anonymous User ID:</strong> ${currentAnonymousUserID}</div>`;
+        
+        if (html) {
+          contentDiv.innerHTML = html;
+          resultsDiv.style.display = 'block';
+        } else {
+          resultsDiv.style.display = 'none';
+        }
+      }
+    }
+
+    // Eventos naturais da página
+
+    // Track feature click
+    function trackFeatureClick(feature) {
+      if (typeof admira !== 'undefined') {
+        admira.track('feature_viewed', {
+          feature_name: feature,
+          timestamp: new Date().toISOString()
+        });
+        addLog(`✅ Feature click rastreado: ${feature}`, 'success');
+      }
+    }
+
+    // View product (simula product_viewed)
+    function viewProduct(productId, productName, price) {
+      if (typeof admira !== 'undefined') {
+        admira.track('product_viewed', {
+          product_id: productId,
+          product_name: productName,
+          price: price,
+          timestamp: new Date().toISOString()
+        });
+        addLog(`✅ Product viewed: ${productName}`, 'success');
+      }
+    }
+
+    // Add to cart
+    function addToCart(productId, price) {
+      if (typeof admira !== 'undefined') {
+        cartItems.push({ productId, price });
+        admira.track('add_to_cart', {
+          product_id: productId,
+          value: price,
+          timestamp: new Date().toISOString()
+        });
+        addLog(`✅ Produto adicionado ao carrinho: ${productId}`, 'success');
+      }
+    }
+
+    // Go to checkout
+    function goToCheckout() {
+      if (typeof admira !== 'undefined') {
+        const total = cartItems.reduce((sum, item) => sum + item.price, 0);
+        admira.track('checkout_started', {
+          cart_value: total,
+          items_count: cartItems.length,
+          timestamp: new Date().toISOString()
+        });
+        addLog(`✅ Checkout iniciado: R$ ${total.toFixed(2)}`, 'success');
+      }
+    }
+
+    // Handle contact form (simula lead_created)
+    function handleContactForm(event) {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+      const email = formData.get('email');
+      const name = formData.get('name');
+
+      // Identify user
+      if (typeof admira !== 'undefined' && email) {
+        admira.identify(email, {
+          name: name,
+          source: 'contact_form'
+        });
+        addLog(`✅ Usuário identificado: ${email}`, 'success');
+        
+        // Track lead_created
+        admira.track('lead_created', {
+          lead_source: 'contact_form',
+          timestamp: new Date().toISOString()
+        });
+        addLog(`✅ Lead criado via formulário de contato`, 'success');
+        
+        // Atualizar email do cron
+        const cronEmail = document.getElementById('cronEmail');
+        if (cronEmail) {
+          cronEmail.value = email;
+        }
+      }
+
+      alert('Mensagem enviada com sucesso! Nossa equipe entrará em contato em breve.');
+      event.target.reset();
+    }
+
+    // Handle signup form (simula signup)
+    function handleSignupForm(event) {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+      const email = formData.get('email');
+      const name = formData.get('name');
+      const plan = formData.get('plan');
+
+      // Identify user
+      if (typeof admira !== 'undefined' && email) {
+        admira.identify(email, {
+          name: name,
+          plan: plan,
+          source: 'signup_form'
+        });
+        addLog(`✅ Usuário identificado: ${email}`, 'success');
+        
+        // Track signup
+        admira.track('signup', {
+          plan: plan,
+          timestamp: new Date().toISOString()
+        });
+        addLog(`✅ Signup rastreado: ${plan}`, 'success');
+        
+        // Atualizar email do cron
+        const cronEmail = document.getElementById('cronEmail');
+        if (cronEmail) {
+          cronEmail.value = email;
+        }
+      }
+
+      alert('Conta criada com sucesso! Bem-vindo à nossa plataforma.');
+      event.target.reset();
+    }
+
+    // Mostrar touchpoints
+    function showTouchpoints() {
+      try {
+        const touchpoints = admira.getTouchpoints();
+        const panel = document.getElementById('touchpointsPanel');
+        
+        if (!panel) return;
+        
+        if (!touchpoints || touchpoints.length === 0) {
+          panel.innerHTML = '<p style="color: #999;">Nenhum touchpoint encontrado. Visite uma página com UTMs na URL.</p>';
+        } else {
+          panel.innerHTML = `
+            <h3>Touchpoints (${touchpoints.length})</h3>
+            ${touchpoints.map((tp, idx) => `
+              <div class="status-item" style="margin-bottom: 15px;">
+                <strong>Touchpoint #${idx + 1}</strong>
+                <div style="margin-top: 5px;">
+                  <strong>Timestamp:</strong> ${new Date(tp.timestamp).toLocaleString()}
+                </div>
+                <pre style="margin-top: 5px; background: #fff; padding: 10px; border-radius: 4px; overflow-x: auto;">${JSON.stringify(tp.utm || {}, null, 2)}</pre>
+              </div>
+            `).join('')}
+          `;
+        }
+        
+        panel.style.display = 'block';
+        addLog(`✅ Touchpoints carregados: ${touchpoints.length}`, 'success');
+      } catch (error) {
+        addLog(`❌ Erro: ${error.message}`, 'error');
+      }
+    }
+
+    // Auto-inicializar ao carregar
+    window.addEventListener('DOMContentLoaded', function() {
+      addLog('📄 Página carregada - Page view capturado automaticamente', 'info');
+      
+      // Verificar se há UTMs na URL
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('utm_source')) {
+        addLog('✅ UTMs detectados na URL!', 'success');
+      }
+
+      // Auto-inicializar SDK após 1 segundo
+      setTimeout(() => {
+        if (typeof admira !== 'undefined') {
+          const apiKey = document.getElementById('apiKey')?.value;
+          if (apiKey && apiKey.startsWith('apikey-')) {
+            initializeSDK();
+          }
+        } else {
+          addLog('⚠️ SDK não encontrado. Verifique se o servidor está rodando em http://localhost:5173', 'warning');
+        }
+      }, 1000);
+    });
+
+    // Smooth scroll para links internos
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
+    // ============================================
+    // Funções para disparar eventos de conversão
+    // ============================================
+
+    // 1. IDENTIFY
+    function triggerIdentify() {
+      if (typeof admira === 'undefined') {
+        addLog('❌ SDK não inicializado. Por favor, inicialize o SDK primeiro.', 'error');
+        alert('SDK não inicializado. Por favor, inicialize o SDK primeiro.');
+        return;
+      }
+
+      const email = document.getElementById('identifyEmail').value;
+      if (!email) {
+        addLog('❌ Email é obrigatório para identify', 'error');
+        alert('Por favor, preencha o email');
+        return;
+      }
+
+      try {
+        const name = document.getElementById('identifyName').value;
+        const phone = document.getElementById('identifyPhone').value;
+        const company = document.getElementById('identifyCompany').value;
+
+        const traits = {};
+        if (name) traits.name = name;
+        if (phone) traits.phone = phone;
+        if (company) traits.company = company;
+
+        admira.identify(email, traits);
+        addLog(`✅ Identify disparado para: ${email}`, 'success');
+        addLog(`📊 Traits: ${JSON.stringify(traits)}`, 'info');
+      } catch (error) {
+        addLog(`❌ Erro ao disparar identify: ${error.message}`, 'error');
+        console.error('Identify error:', error);
+      }
+    }
+
+    // 2. SIGNUP
+    async function triggerSignup() {
+      if (typeof admira === 'undefined') {
+        addLog('❌ SDK não inicializado. Por favor, inicialize o SDK primeiro.', 'error');
+        alert('SDK não inicializado. Por favor, inicialize o SDK primeiro.');
+        return;
+      }
+
+      try {
+        const email = document.getElementById('signupEventEmail').value;
+        const plan = document.getElementById('signupEventPlan').value;
+        const source = document.getElementById('signupEventSource').value;
+
+        const properties = {};
+        if (email) properties.email = email;
+        if (plan) properties.plan = plan;
+        if (source) properties.source = source;
+
+        // Se tiver email, identifica primeiro
+        if (email) {
+          admira.identify(email, { plan: plan || null });
+          addLog(`✅ Usuário identificado: ${email}`, 'success');
+        }
+
+        await admira.track('signup', properties);
+        addLog(`✅ Signup disparado`, 'success');
+        addLog(`📊 Properties: ${JSON.stringify(properties)}`, 'info');
+      } catch (error) {
+        addLog(`❌ Erro ao disparar signup: ${error.message}`, 'error');
+        console.error('Signup error:', error);
+      }
+    }
+
+    // 3. LEAD_CREATED
+    async function triggerLeadCreated() {
+      if (typeof admira === 'undefined') {
+        addLog('❌ SDK não inicializado. Por favor, inicialize o SDK primeiro.', 'error');
+        alert('SDK não inicializado. Por favor, inicialize o SDK primeiro.');
+        return;
+      }
+
+      try {
+        const email = document.getElementById('leadCreatedEmail').value;
+        const source = document.getElementById('leadCreatedSource').value;
+        const value = document.getElementById('leadCreatedValue').value;
+        const company = document.getElementById('leadCreatedCompany').value;
+
+        const properties = {};
+        if (email) properties.email = email;
+        if (source) properties.lead_source = source;
+        if (value) properties.lead_value = parseFloat(value);
+        if (company) properties.company = company;
+
+        // Se tiver email, identifica primeiro
+        if (email) {
+          admira.identify(email, { company: company || null });
+          addLog(`✅ Usuário identificado: ${email}`, 'success');
+        }
+
+        await admira.track('lead_created', properties);
+        addLog(`✅ Lead Created disparado`, 'success');
+        addLog(`📊 Properties: ${JSON.stringify(properties)}`, 'info');
+      } catch (error) {
+        addLog(`❌ Erro ao disparar lead_created: ${error.message}`, 'error');
+        console.error('Lead created error:', error);
+      }
+    }
+
+    // 4. CONVERSION
+    async function triggerConversion() {
+      if (typeof admira === 'undefined') {
+        addLog('❌ SDK não inicializado. Por favor, inicialize o SDK primeiro.', 'error');
+        alert('SDK não inicializado. Por favor, inicialize o SDK primeiro.');
+        return;
+      }
+
+      const conversionType = document.getElementById('conversionType').value;
+      if (!conversionType) {
+        addLog('❌ Tipo de conversão é obrigatório', 'error');
+        alert('Por favor, preencha o tipo de conversão');
+        return;
+      }
+
+      try {
+        const name = document.getElementById('conversionName').value;
+        const value = document.getElementById('conversionValue').value;
+        const email = document.getElementById('conversionEmail').value;
+
+        const properties = {
+          conversion_type: conversionType
+        };
+        if (name) properties.conversion_name = name;
+        if (value) properties.conversion_value = parseFloat(value);
+        if (email) properties.email = email;
+
+        // Se tiver email, identifica primeiro
+        if (email) {
+          admira.identify(email);
+          addLog(`✅ Usuário identificado: ${email}`, 'success');
+        }
+
+        await admira.track('conversion', properties);
+
+
+
+        admira.track('conversion')
+        addLog(`✅ Conversion disparado: ${conversionType}`, 'success');
+        addLog(`📊 Properties: ${JSON.stringify(properties)}`, 'info');
+      } catch (error) {
+        addLog(`❌ Erro ao disparar conversion: ${error.message}`, 'error');
+        console.error('Conversion error:', error);
+      }
+    }
+
+    // 5. PAYMENT
+    async function triggerPayment() {
+      if (typeof admira === 'undefined') {
+        addLog('❌ SDK não inicializado. Por favor, inicialize o SDK primeiro.', 'error');
+        alert('SDK não inicializado. Por favor, inicialize o SDK primeiro.');
+        return;
+      }
+
+      const transactionId = document.getElementById('paymentTransactionId').value;
+      const revenue = document.getElementById('paymentRevenue').value;
+
+      if (!transactionId) {
+        addLog('❌ Transaction ID é obrigatório', 'error');
+        alert('Por favor, preencha o Transaction ID');
+        return;
+      }
+
+      if (!revenue) {
+        addLog('❌ Revenue é obrigatório', 'error');
+        alert('Por favor, preencha o Revenue');
+        return;
+      }
+
+      try {
+        const currency = document.getElementById('paymentCurrency').value || 'BRL';
+        const method = document.getElementById('paymentMethod').value;
+        const email = document.getElementById('paymentEmail').value;
+        const productId = document.getElementById('paymentProductId').value;
+        const productName = document.getElementById('paymentProductName').value;
+
+        const properties = {
+          transaction_id: transactionId,
+          revenue: parseFloat(revenue),
+          currency: currency
+        };
+        if (method) properties.payment_method = method;
+        if (email) properties.email = email;
+        if (productId) properties.product_id = productId;
+        if (productName) properties.product_name = productName;
+
+        // Se tiver email, identifica primeiro
+        if (email) {
+          admira.identify(email);
+          addLog(`✅ Usuário identificado: ${email}`, 'success');
+        }
+
+        await admira.track('payment', properties);
+
+        addLog(`✅ Payment disparado: ${transactionId} - R$ ${revenue}`, 'success');
+        addLog(`📊 Properties: ${JSON.stringify(properties)}`, 'info');
+      } catch (error) {
+        addLog(`❌ Erro ao disparar payment: ${error.message}`, 'error');
+        console.error('Payment error:', error);
+      }
+    }
+
+
+
+
+    // Função para testar spam protection (Rule 6)
+async function testSpamProtection() {
+    if (typeof admira === 'undefined') {
+        addLog('❌ SDK não inicializado', 'error');
+        return;
+    }
+
+    addLog('🧪 TESTE: Spam Protection (Rule 6)', 'info');
+    addLog('📝 Enviando 5 eventos em menos de 5 segundos...', 'info');
+    
+    const startTime = Date.now();
+    const promises = [];
+    
+    // Enviar 5 eventos quase simultaneamente
+    for (let i = 1; i <= 5; i++) {
+        promises.push(
+            admira.track('test_spam', {
+                test_number: i,
+                timestamp: new Date().toISOString()
+            }).then(() => {
+                const elapsed = ((Date.now() - startTime) / 1000).toFixed(2);
+                addLog(`📤 Evento ${i} enviado (${elapsed}s)`, 'info');
+            }).catch(err => {
+                addLog(`❌ Erro no evento ${i}: ${err.message}`, 'error');
+            })
+        );
+    }
+    
+    await Promise.all(promises);
+    
+    const totalTime = ((Date.now() - startTime) / 1000).toFixed(2);
+    addLog(`⏱️ Todos os eventos enviados em ${totalTime}s`, 'info');
+    addLog('🔍 Verifique os logs do servidor e o banco de dados', 'info');
+    
+    // Aguardar 1 segundo e verificar quantos foram salvos
+    setTimeout(async () => {
+        addLog('📊 Verificando quantos touchpoints foram salvos...', 'info');
+        // Você pode adicionar uma chamada para verificar no banco aqui
+    }, 1000);
+}
+  </script>
+</body>
+</html>
