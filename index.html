@@ -720,7 +720,8 @@
   <!-- SDK: carregado do backend via fetch com header ngrok (evita página de aviso no celular) -->
   <script>
   (function(){
-    var u = 'https://headachy-unadulatory-theola.ngrok-free.dev/static/js/admira.js';
+    window.__ADMIRA_BASE_URL = 'https://headachy-unadulatory-theola.ngrok-free.dev';
+    var u = window.__ADMIRA_BASE_URL + '/static/js/admira.js';
     fetch(u, { headers: { 'ngrok-skip-browser-warning': 'true' } })
       .then(function(r){ return r.text(); })
       .then(function(code){ var s = document.createElement('script'); s.textContent = code; document.head.appendChild(s); })
@@ -784,7 +785,8 @@
       }
 
       try {
-        admira.init(apiKey);
+        var initOpts = window.__ADMIRA_BASE_URL ? { baseUrl: window.__ADMIRA_BASE_URL } : {};
+        admira.init(apiKey, initOpts);
         sdkInitialized = true;
         addLog('✅ SDK inicializado com sucesso!', 'success');
         checkStatus();

@@ -163,7 +163,8 @@
   </div>
   <script>
   (function(){
-    var u = 'https://headachy-unadulatory-theola.ngrok-free.dev/static/js/admira.js';
+    window.__ADMIRA_BASE_URL = 'https://headachy-unadulatory-theola.ngrok-free.dev';
+    var u = window.__ADMIRA_BASE_URL + '/static/js/admira.js';
     fetch(u, { headers: { 'ngrok-skip-browser-warning': 'true' } })
       .then(function(r){ return r.text(); })
       .then(function(code){ var s = document.createElement('script'); s.textContent = code; document.head.appendChild(s); })
@@ -177,7 +178,10 @@
       window.addEventListener('DOMContentLoaded', function() {
         setTimeout(function() {
           if (typeof admira !== 'undefined' && typeof admira.init === 'function' && ADMIRA_API_KEY) {
-            try { admira.init(ADMIRA_API_KEY); } catch (e) { console.warn('Admira init:', e); }
+            try {
+              var opts = window.__ADMIRA_BASE_URL ? { baseUrl: window.__ADMIRA_BASE_URL } : {};
+              admira.init(ADMIRA_API_KEY, opts);
+            } catch (e) { console.warn('Admira init:', e); }
           }
         }, 500);
       });
